@@ -1,3 +1,6 @@
+import webserver from "infra/webserver.js";
+import activation from "models/activation.js";
+import user from "models/user";
 import orchestrator from "tests/orchestrator.js";
 
 beforeAll(async () => {
@@ -8,6 +11,9 @@ beforeAll(async () => {
 });
 
 describe("Use case: Registration Flow (all successful)", () => {
+  let createdUserResponseBody;
+  let activationTokenId;
+
   test("Create user account", async () => {
     const createdUserResponse = await fetch(
       "http://localhost:3000/api/v1/users",
@@ -18,7 +24,7 @@ describe("Use case: Registration Flow (all successful)", () => {
         },
         body: JSON.stringify({
           username: "RegistrationFlow",
-          email: "registration.flow@gmail.com",
+          email: "registration.flow@clonetabnews.com",
           password: "RegistrationFlowPassword",
         }),
       },
@@ -26,12 +32,12 @@ describe("Use case: Registration Flow (all successful)", () => {
 
     expect(createdUserResponse.status).toBe(201);
 
-    const createdUserResponseBody = await createdUserResponse.json();
+    createdUserResponseBody = await createdUserResponse.json();
 
     expect(createdUserResponseBody).toEqual({
       id: createdUserResponseBody.id,
       username: "RegistrationFlow",
-      email: "registration.flow@gmail.com",
+      email: "registration.flow@clonetabnews.com",
       features: ["read:activation_token"],
       password: createdUserResponseBody.password,
       created_at: createdUserResponseBody.created_at,
@@ -39,8 +45,48 @@ describe("Use case: Registration Flow (all successful)", () => {
     });
   });
 
-  test("Receive activation email", async () => {});
-  test("Activate activation email", async () => {});
+  test("Receive activation email", async () => {
+    const lastEmail = await orchestrator.getLastEmail();
+
+    expect(lastEmail.sender).toBe("<contato@clonetabnews.com>");
+    expect(lastEmail.recipients[0]).toBe(
+      "<registration.flow@clonetabnews.com>",
+    );
+    expect(lastEmail.subject).toBe("Ative seu cadastro no CloneTabNews!");
+    expect(lastEmail.text).toContain("RegistrationFlow");
+
+    activationTokenId = orchestrator.extractUUID(lastEmail.text);
+
+    expect(lastEmail.text).toContain(
+      `${webserver.origin}/registration/activate/${activationTokenId}`,
+    );
+
+    const activationTokenObject =
+      await activation.findOneValidById(activationTokenId);
+
+    expect(activationTokenObject.user_id).toBe(createdUserResponseBody.id);
+    expect(activationTokenObject.used_at).toBe(null);
+  });
+
+  test("Activate activation email", async () => {
+    const activationResponse = await fetch(
+      `http://localhost:3000/api/v1/activations/${activationTokenId}`,
+      {
+        method: "PATCH",
+      },
+    );
+
+    expect(activationResponse.status).toBe(200);
+
+    const activationResponseBody = await activationResponse.json();
+
+    expect(Date.parse(activationResponseBody.used_at)).not.toBeNaN();
+
+    const activatedUser = await user.findOneByUsername("RegistrationFlow");
+    expect(activatedUser.features).toEqual(["create:session"]);
+  });
+
   test("Login", async () => {});
+
   test("Get user information", async () => {});
 });
