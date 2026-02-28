@@ -19,7 +19,7 @@ describe("POST /api/v1/users", () => {
         },
         body: JSON.stringify({
           username: "testuser",
-          email: "testuser@gmail.com",
+          email: "testuser@clonetabnews.com",
           password: "senha123",
         }),
       });
@@ -31,7 +31,7 @@ describe("POST /api/v1/users", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: "testuser",
-        email: "testuser@gmail.com",
+        email: "testuser@clonetabnews.com",
         features: ["read:activation_token"],
         password: responseBody.password,
         created_at: responseBody.created_at,
@@ -65,7 +65,7 @@ describe("POST /api/v1/users", () => {
         },
         body: JSON.stringify({
           username: "duplicatedemail",
-          email: "duplicated@gmail.com",
+          email: "duplicated@clonetabnews.com",
           password: "senha123",
         }),
       });
@@ -79,7 +79,7 @@ describe("POST /api/v1/users", () => {
         },
         body: JSON.stringify({
           username: "duplicatedemail2",
-          email: "Duplicated@gmail.com",
+          email: "Duplicated@clonetabnews.com",
           password: "senha123",
         }),
       });
@@ -104,7 +104,7 @@ describe("POST /api/v1/users", () => {
         },
         body: JSON.stringify({
           username: "duplicatedusername",
-          email: "duplicatedusername1@gmail.com",
+          email: "duplicatedusername1@clonetabnews.com",
           password: "senha123",
         }),
       });
@@ -118,7 +118,7 @@ describe("POST /api/v1/users", () => {
         },
         body: JSON.stringify({
           username: "DuplicatedUsername",
-          email: "duplicatedusername2@gmail.com",
+          email: "duplicatedusername2@clonetabnews.com",
           password: "senha123",
         }),
       });
