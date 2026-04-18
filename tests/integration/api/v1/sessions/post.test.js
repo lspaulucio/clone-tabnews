@@ -22,7 +22,7 @@ describe("POST /api/v1/sessions", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: "wrongmail@gmail.com",
+          email: "wrongmail@clonetabnews.com",
           password: "correct-password",
         }),
       });
@@ -41,7 +41,7 @@ describe("POST /api/v1/sessions", () => {
 
     test("With correct `email` but incorrect `password`", async () => {
       await orchestrator.createUser({
-        email: "correctmail@gmail.com",
+        email: "correctmail@clonetabnews.com",
       });
 
       const response = await fetch("http://localhost:3000/api/v1/sessions", {
@@ -50,7 +50,7 @@ describe("POST /api/v1/sessions", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: "correctmail@gmail.com",
+          email: "correctmail@clonetabnews.com",
           password: "wrong-password",
         }),
       });
@@ -76,7 +76,7 @@ describe("POST /api/v1/sessions", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: "incorrectmail@gmail.com",
+          email: "incorrectmail@clonetabnews.com",
           password: "wrong-password",
         }),
       });
@@ -95,9 +95,11 @@ describe("POST /api/v1/sessions", () => {
 
     test("With correct `email` and correct `password`", async () => {
       const createdUser = await orchestrator.createUser({
-        email: "correctemail@gmail.com",
+        email: "correctemail@clonetabnews.com",
         password: "correct-password",
       });
+
+      await orchestrator.activateUser(createdUser);
 
       const response = await fetch("http://localhost:3000/api/v1/sessions", {
         method: "POST",
@@ -105,7 +107,7 @@ describe("POST /api/v1/sessions", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: "correctemail@gmail.com",
+          email: "correctemail@clonetabnews.com",
           password: "correct-password",
         }),
       });
