@@ -110,11 +110,11 @@ describe("PATCH /api/v1/users/[username]", () => {
         username: "userA",
       });
 
-      const createduserB = await orchestrator.createUser({
+      const createdUserB = await orchestrator.createUser({
         username: "userB",
       });
 
-      const activateduserB = await orchestrator.activateUser(createduserB);
+      const activateduserB = await orchestrator.activateUser(createdUserB);
       const sessionObject2 = await orchestrator.createSession(
         activateduserB.id,
       );
@@ -322,7 +322,7 @@ describe("PATCH /api/v1/users/[username]", () => {
         await orchestrator.activateUser(privilegedUser);
 
       await orchestrator.addFeaturesToUser(privilegedUser, [
-        "user:update:others",
+        "update:user:others",
       ]);
 
       const privilegedUserSession = await orchestrator.createSession(
