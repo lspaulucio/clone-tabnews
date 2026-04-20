@@ -25,7 +25,7 @@ describe("Use case: Registration Flow (all successful)", () => {
         },
         body: JSON.stringify({
           username: "RegistrationFlow",
-          email: "registration.flow@clonetabnews.com",
+          email: "registration.flow@lspaulucio.dev.br",
           password: "RegistrationFlowPassword",
         }),
       },
@@ -47,9 +47,9 @@ describe("Use case: Registration Flow (all successful)", () => {
   test("Receive activation email", async () => {
     const lastEmail = await orchestrator.getLastEmail();
 
-    expect(lastEmail.sender).toBe("<contato@clonetabnews.com>");
+    expect(lastEmail.sender).toBe("<contato@lspaulucio.dev.br>");
     expect(lastEmail.recipients[0]).toBe(
-      "<registration.flow@clonetabnews.com>",
+      "<registration.flow@lspaulucio.dev.br>",
     );
     expect(lastEmail.subject).toBe("Ative seu cadastro no CloneTabNews!");
     expect(lastEmail.text).toContain("RegistrationFlow");
@@ -98,7 +98,7 @@ describe("Use case: Registration Flow (all successful)", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: "registration.flow@clonetabnews.com",
+          email: "registration.flow@lspaulucio.dev.br",
           password: "RegistrationFlowPassword",
         }),
       },
