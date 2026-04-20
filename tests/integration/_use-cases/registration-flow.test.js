@@ -17,7 +17,7 @@ describe("Use case: Registration Flow (all successful)", () => {
 
   test("Create user account", async () => {
     const createdUserResponse = await fetch(
-      "http://localhost:3000/api/v1/users",
+      `${webserver.origin}/api/v1/users`,
       {
         method: "POST",
         headers: {
@@ -25,7 +25,7 @@ describe("Use case: Registration Flow (all successful)", () => {
         },
         body: JSON.stringify({
           username: "RegistrationFlow",
-          email: "registration.flow@clonetabnews.com",
+          email: "registration.flow@lspaulucio.dev.br",
           password: "RegistrationFlowPassword",
         }),
       },
@@ -47,9 +47,9 @@ describe("Use case: Registration Flow (all successful)", () => {
   test("Receive activation email", async () => {
     const lastEmail = await orchestrator.getLastEmail();
 
-    expect(lastEmail.sender).toBe("<contato@clonetabnews.com>");
+    expect(lastEmail.sender).toBe("<contato@lspaulucio.dev.br>");
     expect(lastEmail.recipients[0]).toBe(
-      "<registration.flow@clonetabnews.com>",
+      "<registration.flow@lspaulucio.dev.br>",
     );
     expect(lastEmail.subject).toBe("Ative seu cadastro no CloneTabNews!");
     expect(lastEmail.text).toContain("RegistrationFlow");
@@ -91,14 +91,14 @@ describe("Use case: Registration Flow (all successful)", () => {
 
   test("Login", async () => {
     const createSessionResponse = await fetch(
-      "http://localhost:3000/api/v1/sessions",
+      `${webserver.origin}/api/v1/sessions`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: "registration.flow@clonetabnews.com",
+          email: "registration.flow@lspaulucio.dev.br",
           password: "RegistrationFlowPassword",
         }),
       },
@@ -112,7 +112,7 @@ describe("Use case: Registration Flow (all successful)", () => {
   });
 
   test("Get user information", async () => {
-    const userResponse = await fetch("http://localhost:3000/api/v1/user", {
+    const userResponse = await fetch(`${webserver.origin}/api/v1/user`, {
       headers: {
         cookie: `session_id=${createSessionResponseBody.token}`,
       },
